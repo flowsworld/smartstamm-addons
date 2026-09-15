@@ -1,0 +1,24 @@
+name: RTR-Netztest
+version: "0.1.0"
+slug: rtr_netztest
+description: Scheduled RTR-Netztest (RMBT) speed measurement reported as Home Assistant sensors
+url: https://github.com/flowsworld/smartstamm-addons/tree/main/rtr-netztest
+arch:
+  - aarch64
+  - amd64
+image: ghcr.io/flowsworld/smartstamm-rtr-netztest-{arch}
+init: false
+startup: application
+boot: auto
+homeassistant_api: true
+stdin: true
+options:
+  control_server: https://c01.netztest.at
+  minute: 30
+  run_on_start: true
+  model: Home Assistant Green
+schema:
+  control_server: url
+  minute: int(0,59)
+  run_on_start: bool
+  model: str
