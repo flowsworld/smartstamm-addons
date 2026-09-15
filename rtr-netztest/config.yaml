@@ -1,5 +1,5 @@
 name: RTR-Netztest
-version: "0.1.0"
+version: "0.1.1"
 slug: rtr_netztest
 description: Scheduled RTR-Netztest (RMBT) speed measurement reported as Home Assistant sensors
 url: https://github.com/flowsworld/smartstamm-addons/tree/main/rtr-netztest

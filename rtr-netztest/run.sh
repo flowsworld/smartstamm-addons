@@ -1,4 +1,4 @@
-#!/usr/bin/env bashio
+#!/command/with-contenv bashio
 # RTR-Netztest add-on: runs the RMBT CLI client on a schedule and publishes the
 # results as Home Assistant sensors through the Supervisor core API proxy.
 set -o pipefail
