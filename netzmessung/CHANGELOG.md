@@ -1,3 +1,7 @@
+## 2026.9.16
+
+- Scheduled rebuild: Alpine packages of the base image refreshed (`apk upgrade`), no upstream changes.
+
 ## 1.0.0
 
 - First release. Merges the former add-ons RTR-Netztest (0.1.1) and Speedtest.net (Ookla CLI) (0.1.0) into one add-on with one schedule loop.
