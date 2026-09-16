@@ -1,0 +1,26 @@
+# Keeps the netzmessung add-on current: every three days the script bumps the
+# add-on version (the Supervisor then rebuilds the image on the device with
+# current Alpine packages), moves the base image to the newest 3.x tag, adopts
+# new Ookla CLI versions and rebuilds the RMBT client when its upstream changed.
+# Runs natively on arm64; nothing changed: about one minute, RMBT rebuild: a few
+# minutes. Hard limit 15 minutes so a hang cannot burn Actions minutes.
+name: Update netzmessung
+on:
+  schedule:
+    - cron: "17 4 */3 * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: update-netzmessung
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update add-on from upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .github/scripts/update.sh

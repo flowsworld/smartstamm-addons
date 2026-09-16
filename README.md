@@ -9,7 +9,7 @@ Add this repository in Home Assistant under Settings → Add-ons → Add-on stor
 
 ## Building
 
-There is no prebuilt image and no CI: the Supervisor builds the add-on on the device (the Dockerfile only adds the run script). Both measurement clients are downloaded at first start. Test locally with
+There is no prebuilt image: the Supervisor builds the add-on on the device (the Dockerfile only runs `apk upgrade` and adds the run script). Both measurement clients are downloaded at first start. Test locally with
 
 ```
 docker build --build-arg BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.22 -t netzmessung netzmessung
@@ -18,9 +18,20 @@ docker run --rm -e SUPERVISOR_TOKEN=x -v <dir>:/data netzmessung
 
 with an `options.json` and an empty file `dry_run` in `<dir>`; sensor payloads are then printed instead of sent.
 
+## Automatic updates
+
+The workflow **Update netzmessung** (`.github/workflows/update.yaml`, script `.github/scripts/update.sh`) runs every three days on a native arm64 runner with a 15-minute limit and commits directly to `main`:
+
+- moves `build.yaml` to the newest `3.x` tag of `ghcr.io/home-assistant/aarch64-base`,
+- adopts a newer Ookla CLI version from speedtest.net/apps/cli after a smoke test of its JSON output,
+- rebuilds the RMBT client when `open-rmbt-client-cli` master moved, runs one real measurement as smoke test, attaches the binary with checksum to a release and updates the pinned values in `run.sh`,
+- bumps the add-on version (CalVer `YYYY.M.D`) on every run and prepends the changes to `CHANGELOG.md`.
+
+The version bump makes the Supervisor (auto-update is enabled for the add-on) rebuild the image on the device, where `apk upgrade` pulls current Alpine packages. Nothing changed: about one minute of runtime; RMBT rebuild: a few minutes. Test the script locally with `DRY_RUN=1 GH_TOKEN=$(gh auth token) .github/scripts/update.sh` (add `FORCE_RMBT_BUILD=1` to exercise the build path); it prints the diff and reverts all uncommitted changes, so commit your own edits first.
+
 ## RMBT client binary
 
-The RTR client is compiled from `rtr-nettest/open-rmbt-client-cli` (`clientRust`, Apache-2.0) at a pinned commit and attached to a release of this repository (`rmbt-client-<commit>`, asset `rmbt-client-aarch64` plus `.sha256`). Build it on an arm64 machine with Docker:
+The RTR client is compiled from `rtr-nettest/open-rmbt-client-cli` (`clientRust`, Apache-2.0) at a pinned commit and attached to a release of this repository (`rmbt-client-<commit>`, asset `rmbt-client-aarch64` plus `.sha256`). The update workflow does this automatically; by hand, build it on an arm64 machine with Docker:
 
 ```
 docker build --platform linux/arm64 -o type=local,dest=out -f - . <<'EOF2'
@@ -35,6 +46,6 @@ COPY --from=build /src/clientRust/target/release/rmbt-client /rmbt-client
 EOF2
 ```
 
-Then `gh release create rmbt-client-<short commit> out/rmbt-client#rmbt-client-aarch64` and update `RMBT_RELEASE` and `RMBT_SHA256` in `netzmessung/run.sh`.
+Then `gh release create rmbt-client-<short commit> out/rmbt-client#rmbt-client-aarch64` and update `RMBT_RELEASE` (with the full commit in its comment) and `RMBT_SHA256` in `netzmessung/run.sh`.
 
 Former add-ons `rtr-netztest` and `speedtest-ookla` (up to 2026-09-16) were merged into this one; their images on ghcr.io are no longer used.

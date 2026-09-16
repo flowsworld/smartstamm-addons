@@ -4,6 +4,9 @@
 # the add-on data directory on first start.
 ARG BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.22
 FROM ${BUILD_FROM}
+# Pull current Alpine packages at every (re)build; the update workflow bumps the
+# add-on version every three days so the device rebuilds the image.
+RUN apk upgrade --no-cache
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 ARG BUILD_ARCH
