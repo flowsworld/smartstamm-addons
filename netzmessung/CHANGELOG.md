@@ -1,3 +1,7 @@
+## 2026.9.19
+
+- Scheduled rebuild: Alpine packages of the base image refreshed (`apk upgrade`), no upstream changes.
+
 ## 2026.9.16
 
 - Scheduled rebuild: Alpine packages of the base image refreshed (`apk upgrade`), no upstream changes.
