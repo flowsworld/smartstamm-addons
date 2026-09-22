@@ -21,8 +21,8 @@ API="http://supervisor/core/api"
 
 # Measurement clients, downloaded once into /data/bin (see install_clients).
 OOKLA_VERSION=1.2.0
-RMBT_RELEASE=rmbt-client-8d85b82   # tag in flowsworld/smartstamm-addons, built from open-rmbt-client-cli commit 8d85b82786abacb361c75a496df118d9ac6e3c87
-RMBT_SHA256=ae67d7de5c35df6e443939d83e0e96d60e629d67023c70710e07ab2b85c3f166
+RMBT_RELEASE=rmbt-client-cb87ff8   # tag in flowsworld/smartstamm-addons, built from open-rmbt-client-cli commit cb87ff88235a2b075d61c9a57e36a2fa332aaf11
+RMBT_SHA256=1dadffcec7c2b7546f5b54f46e30d04fcae33a5b64c397b0f63833bda76f2ba4
 
 # Publish one sensor state. $1 entity id, $2 state, $3 attributes JSON object.
 publish() {
