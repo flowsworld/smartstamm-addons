@@ -1,3 +1,7 @@
+## 2026.9.25
+
+- Scheduled rebuild: Alpine packages of the base image refreshed (`apk upgrade`), no upstream changes.
+
 ## 2026.9.22
 
 - RMBT client 8d85b82 → cb87ff8 (rebuilt, smoke test passed)
